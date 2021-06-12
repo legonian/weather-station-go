@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  
+    <script src="/static/plot.js" defer></script>
+
+  <title>Weather Data</title>
+</head>
+<body>
+  
+  <div class="container">
+    
+    <div class="card d-block mx-auto p-3" style=" width: 22rem;">
+      <div class="card-body">
+        <p>Last Data:</p>
+        <p id="lastData"></p>
+      </div>
+
+      <p id="filter-description" class="my-5 mx-2 d-inline">Data by Day</p>
+
+      <div class="dropdown d-inline mx-2">
+        
+        <button class="btn btn-secondary dropdown-toggle d-inline" type="button" id="dropdownMenu" data-bs-toggle="dropdown">
+          Change Period
+        </button>
+
+        <ul class="dropdown-menu">
+          <li><a id="filter-last-3-hours" class="dropdown-item" href="#">Last 3 Hours</a></li>
+          <li><a id="filter-last-day" class="dropdown-item active" href="#">Last Day</a></li>
+          <li><a id="filter-last-3-day" class="dropdown-item" href="#">Last 3 Days</a></li>
+          <li><a id="filter-last-week" class="dropdown-item" href="#">Last Week</a></li>
+          <li><a id="filter-month" class="dropdown-item" href="#">Last Month</a></li>
+        </ul>
+
+      </div>
+    </div>
+
+    <canvas id="tempChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
+    <canvas id="humidityChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
+    <canvas id="presureChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
+  </div>
+
+</body>
+</html>
