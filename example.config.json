@@ -4,6 +4,7 @@
   },
   "Postgres": {
     "Host": "192.168.0.101",
+    "Port": 5432,
     "User": "postgres",
     "Password": "",
     "Database": "postgres",

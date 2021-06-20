@@ -21,26 +21,30 @@ type (
 )
 
 func New(cfg *config.Config) (*DB, error) {
-	psqlInfo := fmt.Sprintf(
+	sqlCreds := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Postgres.Host,
-		5432,
+		cfg.Postgres.Port,
 		cfg.Postgres.User,
 		cfg.Postgres.Password,
 		cfg.Postgres.Database,
 		cfg.Postgres.SSLMode,
 	)
-	// url := "postgres:mysecretpassword@192.168.0.104:5432/postgres"
-	db, err := sql.Open("postgres", psqlInfo)
+	sqlDB, err := sql.Open("postgres", sqlCreds)
 	if err != nil {
-		return nil, fmt.Errorf("sql.Open postgres (%s): %v", psqlInfo, err)
+		return nil, fmt.Errorf("sql.Open postgres (%s): %v", sqlCreds, err)
 	}
-	if err = db.Ping(); err != nil {
-		return nil, fmt.Errorf("db.Ping(): %v", err)
+	if err = sqlDB.Ping(); err != nil {
+		return nil, fmt.Errorf("sqlDB.Ping: %v", err)
 	}
-	return &DB{
-		sql: db,
-	}, nil
+	db := &DB{
+		sql: sqlDB,
+	}
+	err = db.createDB()
+	if err != nil {
+		return nil, fmt.Errorf("db.createDB: %v", err)
+	}
+	return db, nil
 }
 
 func (db *DB) Add(w models.Weather) error {
@@ -99,8 +103,7 @@ func (db *DB) Get(filter Filter) (weatherData []models.Weather, err error) {
 		}
 		weatherData = append(weatherData, w)
 	}
-	err = rows.Err()
-	if err != nil {
+	if err = rows.Err(); err != nil {
 		return weatherData, fmt.Errorf("rows.Err: %v", err)
 	}
 	return weatherData, nil
@@ -108,4 +111,25 @@ func (db *DB) Get(filter Filter) (weatherData []models.Weather, err error) {
 
 func (db *DB) Stop() error {
 	return db.sql.Close()
+}
+
+func (db *DB) createDB() error {
+	sqlString := `
+	CREATE TABLE IF NOT EXISTS %s(
+		weather_id    int primary key generated always as identity,
+		temperature   decimal   not null,
+		humidity      int       not null,
+		preasure      int       not null,
+		created_at    timestamp not null default current_timestamp
+	);`
+	sqlString = fmt.Sprintf(sqlString, models.WeatherTable)
+	stmt, err := db.sql.Prepare(sqlString)
+	if err != nil {
+		return fmt.Errorf("db.sql.Prepare: %v", err)
+	}
+	defer stmt.Close()
+	if _, err = stmt.Exec(); err != nil {
+		return fmt.Errorf("stmt.Exec: %v", err)
+	}
+	return nil
 }
