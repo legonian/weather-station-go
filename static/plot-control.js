@@ -1,3 +1,4 @@
+// Fetch data and organize data with to add name, color, separators (x axis grid)
 async function fetchData(by) {
   const res = await fetch(`/get?last=${by}`)
   const weather = await res.json()
@@ -63,11 +64,14 @@ async function fetchData(by) {
 }
 
 ;(async function main() {
+  // What period be at start
   const defaultBy = 'day'
+  // Period options
   const optionsBy = ['3hours', 'day', '3days', 'week', 'mounth']
   // Get start data
   let data = await fetchData(defaultBy)
 
+  // Setup table with last and selected data
   const lastTemp = document.getElementById('last-temp')
   const lastHumidity = document.getElementById('last-humidity')
   const lastPreasure = document.getElementById('last-preasure')
@@ -102,7 +106,11 @@ async function fetchData(by) {
   // Draw plot in canvas
   const plot = new Plot(document.getElementById('plot'), data, handleFeedback)
 
-  // Define period selectors
+  // Dont like too much graphs so remove preasure and redraw
+  plot.excluded.push("Preasure")
+  plot.reDraw()
+
+  // Add period selectors
   const selectPeriod = document.getElementById('select-period')
   for (let periodBy of optionsBy) {
     const periodOption = document.createElement('div')
@@ -129,6 +137,7 @@ async function fetchData(by) {
     selectPeriod.appendChild(periodOption)
   }
 
+  // Add or remove graphs from plot if clicked
   document.getElementById('isTemp').onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Temperature")
     if (!this.checked){
