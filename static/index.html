@@ -4,50 +4,73 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/plot.js" defer></script>
+  <script src="/static/plot-control.js" defer></script>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-  
-    <script src="/static/plot.js" defer></script>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 600px;
+    }
+    td,th {
+      border: 2px solid #000000;
+      text-align: left;
+      padding: 8px;
+    }
+  </style>
 
   <title>Weather Data</title>
 </head>
 <body>
-  
-  <div class="container">
-    
-    <div class="card d-block mx-auto p-3" style=" width: 22rem;">
-      <div class="card-body">
-        <p>Last Data:</p>
-        <p id="lastData"></p>
-      </div>
+  <h1>Weather Station</h1>
+  <table>
+    <tr style="background-color: #cacaca;">
+      <th></th>
+      <th>Selected</th>
+      <th>Last</th>
+    </tr>
+    <tr style="background-color: #ffc9c9;">
+      <td>Temperature</td>
+      <td id="selected-temp"></td>
+      <td id="last-temp"></td>
+    </tr>
+    <tr style="background-color: #db9dff;">
+      <td>Humidity</td>
+      <td id="selected-humidity"></td>
+      <td id="last-humidity"></td>
+    </tr>
+    <tr style="background-color: #8da8ff;">
+      <td>Preasure</td>
+      <td id="selected-preasure"></td>
+      <td id="last-preasure"></td>
+    </tr>
+    <tr style="background-color: #cacaca;">
+      <td>Time</td>
+      <td id="selected-time"></td>
+      <td id="last-time"></td>
+    </tr>
+  </table>
+  <canvas id="plot" height="200" width="600" style="padding: 1rem; margin-top: 2rem; border:1px solid #000000;"></canvas>
 
-      <p id="filter-description" class="my-5 mx-2 d-inline">Data by Day</p>
-
-      <div class="dropdown d-inline mx-2">
-        
-        <button class="btn btn-secondary dropdown-toggle d-inline" type="button" id="dropdownMenu" data-bs-toggle="dropdown">
-          Change Period
-        </button>
-
-        <ul class="dropdown-menu">
-          <li><a id="filter-last-3-hours" class="dropdown-item" href="#">Last 3 Hours</a></li>
-          <li><a id="filter-last-day" class="dropdown-item active" href="#">Last Day</a></li>
-          <li><a id="filter-last-3-day" class="dropdown-item" href="#">Last 3 Days</a></li>
-          <li><a id="filter-last-week" class="dropdown-item" href="#">Last Week</a></li>
-          <li><a id="filter-month" class="dropdown-item" href="#">Last Month</a></li>
-        </ul>
-
-      </div>
+  <div>
+    <p>Select data to show:</p>
+    <div>
+      <input type="checkbox" id="isTemp" style="margin: .4rem;" checked>
+      <label for="isTemp">show temperature</label>
     </div>
+    <div>
+      <input type="checkbox" id="isHumidity" style="margin: .4rem;" checked>
+      <label for="isHumidity">show humidity</label>
+    </div>
+    <div>
+      <input type="checkbox" id="isPreasure" style="margin: .4rem;" checked>
+      <label for="isPreasure">show preasure</label>
+    </div>
+  </div>
 
-    <canvas id="tempChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
-    <canvas id="humidityChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
-    <canvas id="presureChart" width="800" height="400" class="img-fluid mx-auto d-block"></canvas>
+  <div id="select-period">
+    <p>Select time period:</p>
   </div>
 
 </body>
