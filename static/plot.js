@@ -79,7 +79,7 @@ class Plot {
       const nowY = this.height * (1 - positionY)
       this.ctx.fillStyle = y.color
       this.ctx.beginPath()
-      this.ctx.arc(nowX, nowY, 5, 0, 7)
+      this.ctx.arc(nowX, nowY, 7, 0, 7)
       this.ctx.fill()
     }
     this.feedback(selected)
@@ -110,10 +110,10 @@ class Plot {
 
         this.ctx.moveTo(prevX, this.height - prevY)
         this.ctx.lineTo(nowX, this.height - nowY)
-        this.ctx.arc(nowX, this.height - nowY, 1, 0, 7)
-        this.ctx.strokeStyle = y.color
+        this.ctx.arc(nowX, this.height - nowY, 3, 0, 7)
+        this.ctx.fillStyle = y.color
       }
-      this.ctx.stroke()
+      this.ctx.fill()
     }
 
     // Draw separations
