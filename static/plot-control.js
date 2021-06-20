@@ -63,8 +63,10 @@ async function fetchData(by) {
 }
 
 ;(async function main() {
+  const defaultBy = 'day'
+  const optionsBy = ['3hours', 'day', '3days', 'week', 'mounth']
   // Get start data
-  let data = await fetchData('day')
+  let data = await fetchData(defaultBy)
 
   const lastTemp = document.getElementById('last-temp')
   const lastHumidity = document.getElementById('last-humidity')
@@ -102,22 +104,25 @@ async function fetchData(by) {
 
   // Define period selectors
   const selectPeriod = document.getElementById('select-period')
-  for (let periodName of ['3hours', 'day', '3days', 'week', 'mounth']) {
+  for (let periodBy of optionsBy) {
     const periodOption = document.createElement('div')
 
     const periodInput = document.createElement('input')
     periodInput.setAttribute('type', 'radio')
     periodInput.setAttribute('name', 'last-period')
-    periodInput.setAttribute('value', periodName)
-    periodInput.setAttribute('id', periodName)
+    periodInput.setAttribute('value', periodBy)
+    periodInput.setAttribute('id', periodBy)
     periodInput.setAttribute('style', 'margin: .4rem;')
+    if (periodBy === defaultBy) {
+      periodInput.checked = true
+    }
     periodInput.addEventListener('change', async function(e) {
       data = await fetchData(e.target.value)
       plot.reDraw(data)
     })
     const periodLabel = document.createElement('label')
-    periodLabel.setAttribute('for', periodName)
-    periodLabel.innerText = periodName
+    periodLabel.setAttribute('for', periodBy)
+    periodLabel.innerText = periodBy
 
     periodOption.appendChild(periodInput)
     periodOption.appendChild(periodLabel)
