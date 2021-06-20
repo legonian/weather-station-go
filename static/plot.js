@@ -6,15 +6,15 @@ class Plot {
     this.excluded = []
     
     this.plot.addEventListener('mousemove', e => {
-      this.sendFeedback(e.offsetX)
+      this._callFeedback(e.offsetX)
     })
     this.plot.addEventListener('touchmove', e => {
-      this.sendFeedback(e.touches[0].pageX)
+      this._callFeedback(e.touches[0].pageX)
     })
-    this.reDraw(data, feedback)
+    this.update(data, feedback)
   }
 
-  sendFeedback(x) {
+  _callFeedback(x) {
     if (x < 0) {
       x = 0
     } else if (this.plot.width < x) {
@@ -85,7 +85,7 @@ class Plot {
     this.feedback(selected)
   }
 
-  drawGraph() {
+  _draw() {
     this.ctx.clearRect(0, 0, this.plot.width, this.height)
     const x = this.x
     const ys = this.ys
@@ -129,7 +129,7 @@ class Plot {
     this.savedGraph = this.ctx.getImageData(0, 0, this.plot.width, this.height)
   }
 
-  reDraw(data, feedback){
+  update(data, feedback){
     if (typeof data !== "undefined") {
       let { xAxis, xSeparator, yAxises } = data
       for (let y of yAxises) {
@@ -149,6 +149,6 @@ class Plot {
     if (typeof feedback !== "undefined") {
       this.feedback = feedback
     }
-    this.drawGraph()
+    this._draw()
   }
 }

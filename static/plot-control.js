@@ -108,7 +108,7 @@ async function fetchData(by) {
 
   // Dont like too much graphs so remove preasure and redraw
   plot.excluded.push("Preasure")
-  plot.reDraw()
+  plot.update()
 
   // Add period selectors
   const selectPeriod = document.getElementById('select-period')
@@ -126,7 +126,7 @@ async function fetchData(by) {
     }
     periodInput.addEventListener('change', async function(e) {
       data = await fetchData(e.target.value)
-      plot.reDraw(data)
+      plot.update(data)
     })
     const periodLabel = document.createElement('label')
     periodLabel.setAttribute('for', periodBy)
@@ -143,20 +143,20 @@ async function fetchData(by) {
     if (!this.checked){
       plot.excluded.push("Temperature")
     }
-    plot.reDraw()
+    plot.update()
   }
   document.getElementById('isHumidity').onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Humidity")
     if (!this.checked){
       plot.excluded.push("Humidity")
     }
-    plot.reDraw()
+    plot.update()
   }
   document.getElementById('isPreasure').onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Preasure")
     if (!this.checked){
       plot.excluded.push("Preasure")
     }
-    plot.reDraw()
+    plot.update()
   }
 })()
