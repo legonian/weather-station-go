@@ -3,6 +3,7 @@ class Plot {
     this.plot = canvasElem
     this.height = canvasElem.height
     this.ctx = canvasElem.getContext('2d')
+    this.ctx.lineWidth = 2
     this.excluded = []
     
     this.plot.addEventListener('mousemove', e => {
@@ -21,42 +22,6 @@ class Plot {
       x = this.plot.width
     }
     const target = this.startX + x / this.scaleX
-
-    function findClosest(arr, target) {
-      let n = arr.length
-      if (target <= arr[0]){
-        return 0
-      }
-      if (target >= arr[n - 1]){
-        return n - 1
-      }
-      let i = 0, j = n, mid = 0
-      while (i < j) {
-        mid = Math.round((i + j) / 2)
-        if (arr[mid] == target) {
-          return mid
-        }
-        if (target < arr[mid]) {
-          if (mid > 0 && target > arr[mid - 1]) {
-            if (target - arr[mid - 1] >= arr[mid] - target)
-              return mid
-            else
-              return mid - 1
-          }
-          j = mid
-        } else {
-          if (mid < n - 1 && target < arr[mid + 1]){
-            if (target - arr[mid] >= arr[mid + 1] - target)
-              return mid + 1
-            else
-              return mid
-          }
-          i = mid + 1
-        }
-      }
-      return mid
-    }
-    
     const closestX = findClosest(this.x, target)
     const nowX = (this.x[closestX] - this.startX) * this.scaleX
 
@@ -101,6 +66,11 @@ class Plot {
       const scaleY = this.height / (Math.max(...y.values) - Math.min(...y.values))
 
       this.ctx.beginPath()
+      this.ctx.strokeStyle = y.color
+      this.ctx.fillStyle = y.color
+
+      const dots = new Path2D()
+
       for (let i = 1; i < y.values.length; i++) {
         const prevX = (x[i - 1] - this.startX) * this.scaleX
         const prevY = (y.values[i - 1] - startY) * scaleY
@@ -110,22 +80,26 @@ class Plot {
 
         this.ctx.moveTo(prevX, this.height - prevY)
         this.ctx.lineTo(nowX, this.height - nowY)
-        this.ctx.arc(nowX, this.height - nowY, 3, 0, 7)
-        this.ctx.fillStyle = y.color
+
+        dots.moveTo(prevX, this.height - prevY)
+        dots.arc(nowX, this.height - nowY, 4, 0, 7)
       }
-      this.ctx.fill()
+      this.ctx.stroke()
+      this.ctx.fill(dots)
     }
 
     // Draw separations
     this.ctx.beginPath()
+    this.ctx.strokeStyle = 'rgb(160,160,160)'
+
     for (let separation of this.xSeparator) {
       separation = (separation - this.startX) * this.scaleX
       this.ctx.moveTo(separation, 0)
       this.ctx.lineTo(separation, this.height)
-      this.ctx.strokeStyle = 'rgb(160,160,160)'
     }
     this.ctx.stroke()
 
+    // Save to redraw on feedback
     this.savedGraph = this.ctx.getImageData(0, 0, this.plot.width, this.height)
   }
 
@@ -151,4 +125,40 @@ class Plot {
     }
     this._draw()
   }
+}
+
+// Find closest to target element and return its index
+function findClosest(arr, target) {
+  let n = arr.length
+  if (target <= arr[0]){
+    return 0
+  }
+  if (target >= arr[n - 1]){
+    return n - 1
+  }
+  let i = 0, j = n, mid = 0
+  while (i < j) {
+    mid = Math.round((i + j) / 2)
+    if (arr[mid] == target) {
+      return mid
+    }
+    if (target < arr[mid]) {
+      if (mid > 0 && target > arr[mid - 1]) {
+        if (target - arr[mid - 1] >= arr[mid] - target)
+          return mid
+        else
+          return mid - 1
+      }
+      j = mid
+    } else {
+      if (mid < n - 1 && target < arr[mid + 1]){
+        if (target - arr[mid] >= arr[mid + 1] - target)
+          return mid + 1
+        else
+          return mid
+      }
+      i = mid + 1
+    }
+  }
+  return mid
 }
