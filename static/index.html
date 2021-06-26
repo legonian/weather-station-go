@@ -23,8 +23,8 @@
   <title>Weather Data</title>
 </head>
 <body>
-  <h1>Weather Station</h1>
-  <table>
+  <h1 style="text-align:center;">Weather Station</h1>
+  <table style="margin: 1rem;">
     <tr style="background-color: #cacaca;">
       <th></th>
       <th>Selected</th>
@@ -51,26 +51,28 @@
       <td id="last-time"></td>
     </tr>
   </table>
-  <canvas id="plot" height="200" width="600" style="padding: 1rem; margin-top: 2rem; border:1px solid #000000;"></canvas>
+  <div style="padding: 1rem; margin-top: 2rem; overflow:auto;">
+    <canvas id="plot" height="250" width="600" style="border:1px solid #000000;"></canvas>
+  </div>
 
   <div>
-    <p>Select data to show:</p>
+    <p style="margin-bottom: 0; font-size: 200%;">Select data to show:</p>
     <div>
       <input type="checkbox" id="isTemp" style="margin: .4rem;" checked>
-      <label for="isTemp">show temperature</label>
+      <label for="isTemp" style="font-size: 180%;">temperature</label>
     </div>
     <div>
       <input type="checkbox" id="isHumidity" style="margin: .4rem;" checked>
-      <label for="isHumidity">show humidity</label>
+      <label for="isHumidity" style="font-size: 180%;">humidity</label>
     </div>
     <div>
       <input type="checkbox" id="isPreasure" style="margin: .4rem;">
-      <label for="isPreasure">show preasure</label>
+      <label for="isPreasure" style="font-size: 180%;">preasure</label>
     </div>
   </div>
 
   <div id="select-period">
-    <p>Select time period:</p>
+    <p style="margin-bottom: 0; font-size: 200%;">Select time period:</p>
   </div>
 
 </body>

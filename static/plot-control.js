@@ -7,7 +7,7 @@ const selectPeriod = document.getElementById('select-period')
 // What period gonna be selected by default
 const defaultBy = 'day'
 // What period options are gonna be displayed in 'selectPeriod'
-const optionsBy = ['3hours', 'day', '3days', 'week', 'mounth']
+const optionsBy = ['3hours', 'day', '3days', 'week', 'month']
 
 // Elemets thats gonna fills with info using innerText
 const lastTemp = document.getElementById('last-temp')
@@ -148,6 +148,7 @@ async function fetchData(by) {
     })
     const periodLabel = document.createElement('label')
     periodLabel.setAttribute('for', periodBy)
+    periodLabel.setAttribute('style', 'font-size: 180%;')
     periodLabel.innerText = periodBy
 
     periodOption.appendChild(periodInput)
