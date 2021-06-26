@@ -1,3 +1,30 @@
+// Main canvas to fill with plot data and with functionality of selecting info 
+// by X axis with mouse or touch
+const plotCanvas = document.getElementById('plot')
+
+// Div elevemet that gonna be filled with child elements to pick period
+const selectPeriod = document.getElementById('select-period')
+// What period gonna be selected by default
+const defaultBy = 'day'
+// What period options are gonna be displayed in 'selectPeriod'
+const optionsBy = ['3hours', 'day', '3days', 'week', 'mounth']
+
+// Elemets thats gonna fills with info using innerText
+const lastTemp = document.getElementById('last-temp')
+const lastHumidity = document.getElementById('last-humidity')
+const lastPreasure = document.getElementById('last-preasure')
+const lastTime = document.getElementById('last-time')
+
+const selectedTemp = document.getElementById('selected-temp')
+const selectedHumidity = document.getElementById('selected-humidity')
+const selectedPreasure = document.getElementById('selected-preasure')
+const selectedTime = document.getElementById('selected-time')
+
+// Checkboxes to hide some graphs
+const tempCheckbox = document.getElementById('isTemp')
+const humidityCheckbox = document.getElementById('isHumidity')
+const preasureCheckbox = document.getElementById('isPreasure')
+
 // Fetch data and organize data with to add name, color, separators (x axis grid)
 async function fetchData(by) {
   const res = await fetch(`/get?last=${by}`)
@@ -64,23 +91,8 @@ async function fetchData(by) {
 }
 
 ;(async function main() {
-  // What period be at start
-  const defaultBy = 'day'
-  // Period options
-  const optionsBy = ['3hours', 'day', '3days', 'week', 'mounth']
   // Get start data
   let data = await fetchData(defaultBy)
-
-  // Setup table with last and selected data
-  const lastTemp = document.getElementById('last-temp')
-  const lastHumidity = document.getElementById('last-humidity')
-  const lastPreasure = document.getElementById('last-preasure')
-  const lastTime = document.getElementById('last-time')
-
-  const selectedTemp = document.getElementById('selected-temp')
-  const selectedHumidity = document.getElementById('selected-humidity')
-  const selectedPreasure = document.getElementById('selected-preasure')
-  const selectedTime = document.getElementById('selected-time')
 
   const ys = data.yAxises
   lastTemp.innerText = String(ys[0].values[ys[0].values.length - 1]) + ' °C'
@@ -96,7 +108,6 @@ async function fetchData(by) {
   // Define cursor selectring behavior
   function handleFeedback(selected) {
     const { xAxis, yAxises } = selected
-
     selectedTemp.innerText = String(yAxises[0].value) + ' °C'
     selectedHumidity.innerText = String(yAxises[1].value) + ' %'
     selectedPreasure.innerText = String(yAxises[2].value) + ' mBar'
@@ -104,14 +115,21 @@ async function fetchData(by) {
   }
 
   // Draw plot in canvas
-  const plot = new Plot(document.getElementById('plot'), data, handleFeedback)
+  const plot = new Plot(plotCanvas, data, handleFeedback)
 
-  // Dont like too much graphs so remove preasure and redraw
-  plot.excluded.push("Preasure")
+  // Remove graph if html checkbox is unchecked
+  if (!tempCheckbox.checked){
+    plot.excluded.push("Temperature")
+  }
+  if (!humidityCheckbox.checked){
+    plot.excluded.push("Humidity")
+  }
+  if (!preasureCheckbox.checked){
+    plot.excluded.push("Preasure")
+  }
   plot.update()
 
   // Add period selectors
-  const selectPeriod = document.getElementById('select-period')
   for (let periodBy of optionsBy) {
     const periodOption = document.createElement('div')
 
@@ -138,21 +156,21 @@ async function fetchData(by) {
   }
 
   // Add or remove graphs from plot if clicked
-  document.getElementById('isTemp').onclick = async function() {
+  tempCheckbox.onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Temperature")
     if (!this.checked){
       plot.excluded.push("Temperature")
     }
     plot.update()
   }
-  document.getElementById('isHumidity').onclick = async function() {
+  humidityCheckbox.onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Humidity")
     if (!this.checked){
       plot.excluded.push("Humidity")
     }
     plot.update()
   }
-  document.getElementById('isPreasure').onclick = async function() {
+  preasureCheckbox.onclick = async function() {
     plot.excluded = plot.excluded.filter(v => v !== "Preasure")
     if (!this.checked){
       plot.excluded.push("Preasure")
