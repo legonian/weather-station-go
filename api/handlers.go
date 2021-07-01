@@ -70,7 +70,7 @@ func (api *API) setWeather(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	log.Printf("weather is set: %v", weather)
-	fmt.Fprint(w, "Parameters set!")
+	fmt.Fprint(w, time.Now().Add(3*time.Hour).String())
 }
 
 func parseDuration(query url.Values) (after, until time.Time) {
