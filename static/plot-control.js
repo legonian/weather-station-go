@@ -28,15 +28,29 @@ const preasureCheckbox = document.getElementById('isPreasure')
 // Fetch data and organize data with to add name, color, separators (x axis grid)
 async function fetchData(by) {
   const res = await fetch(`/get?last=${by}`)
-  const weather = await res.json()
+  let weather = await res.json()
 
   if (weather.length <= 0) {
     throw new Error('empty data')
   }
+  weather = weather.map(w => {
+    let t = new Date(w.time)
+    w.time = t.getTime()
+    return w
+  })
+  weather.sort((a, b) => {
+    if (a.time < b.time) {
+      return -1
+    } else if (a.time == b.time) {
+      return 0
+    } else {
+      return 1
+    }
+  })
   const temp = weather.map(w => w.temp)
   const humidity = weather.map(w => w.humidity)
   const preasure = weather.map(w => w.preasure)
-  const time = weather.map(w => (new Date(w.time)).getTime())
+  const time = weather.map(w => w.time)
 
   function timeSeparator(timeArray) {
     const firstTime = Math.min(...timeArray)
